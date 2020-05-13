@@ -1,17 +1,16 @@
-using System;
-using System.Linq;
+using DatingApp.API.Data;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using DatingApp.API.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DatingApp.API.Controllers
 {
     // Routes for this controller , [controller] is just the placeholder for the controller name
     [Route("api/[controller]")]
-    [ApiController]
-    public class ValuesController : ControllerBase
+    [ApiController] // This attribute is very useful this sends good respones and can be used for validations as well
+    [Authorize] // This is telling that all methods inside the values controller to be authorized
+    public class ValuesController : ControllerBase // the difference between this asd :Controller is the one we are using does not provide view related help as we are using angular for that
     {
         private readonly DataContext _dc;
         public ValuesController(DataContext dc)
