@@ -18,6 +18,7 @@ namespace DatingApp.API.Controllers
             this._dc = dc;
         }
 
+        [AllowAnonymous]
         // GET api/values
         // IEnumerable is generally a colleciton of things. If you give like this its just collection of strings IEnumerable<string> 
         [HttpGet]
@@ -27,6 +28,7 @@ namespace DatingApp.API.Controllers
             return Ok(values);
         }
 
+        [AllowAnonymous]
         // GET api/values/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetValue(int id)
