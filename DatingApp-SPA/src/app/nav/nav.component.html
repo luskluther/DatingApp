@@ -1,16 +1,16 @@
 <nav class="navbar navbar-expand-md navbar-dark bg-dark">
   <div class="container">
-    <a class="navbar-brand" href="#">A Random App</a>
+    <a class="navbar-brand" href="#" [routerLink]="['/home']">A Random App</a>
       
     <ul *ngIf="loggedIn()" class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link" href="#">Matches</a>
+      <li class="nav-item" routerLinkActive="active">
+        <a class="nav-link" href="#" [routerLink]="['/members']">Matches</a>
+      </li>
+      <li class="nav-item" routerLinkActive="active">
+        <a class="nav-link" href="#" href="#" [routerLink]="['/lists']">Lists</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#">Lists</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Messages</a>
+        <a class="nav-link" href="#" [routerLink]="['/messages']">Messages</a>
       </li>
     </ul>
 
@@ -29,7 +29,7 @@
     <form *ngIf="!loggedIn()" #loginForm="ngForm" class="form-inline my-2 my-lg-0" (ngSubmit)="login()">
       <input class="form-control mr-sm-2" type="text" name="userName" placeholder="User Name" required [(ngModel)]="model.userName">
       <input class="form-control mr-sm-2" type="password" name="password" placeholder="Password" required [(ngModel)]="model.password">
-      <button [disabled]="!loginForm.valid" class="btn btn-outline-success my-2 my-sm-0" type="submit">Login</button>
+      <button [disabled]="!loginForm.valid" class="btn btn-primary my-2 my-sm-0" type="submit">Login</button>
     </form>
   </div>
 </nav>

@@ -8,7 +8,8 @@ namespace DatingApp.API.Data
         // Here we are injecting options for the DataContext class , telling the DataContext class about the entities.
         public DataContext(DbContextOptions<DataContext> options) : base(options){}
 
-        public DbSet<Value> Values {get;set;}
-        public DbSet<User> Users {get;set;}
+        public DbSet<Value> Values { get;set; }
+        public DbSet<User> Users { get;set; }
+        public DbSet<Photo> Photos { get;set; } // create these and then create migrations
     }
 }
