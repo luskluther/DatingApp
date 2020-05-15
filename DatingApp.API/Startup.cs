@@ -1,12 +1,6 @@
-using System;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Collections.Generic;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using DatingApp.API.Data;
@@ -14,6 +8,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.AspNetCore.Diagnostics;
+using System.Net;
+using Microsoft.AspNetCore.Http;
+using DatingApp.API.Helpers;
 
 namespace DatingApp.API
 {
@@ -69,6 +67,26 @@ namespace DatingApp.API
             {
                 // Developer friendly exception common page
                 app.UseDeveloperExceptionPage();
+            } else {
+                // Df we are dealing with a higher env we need to handle exceptions in a good way and this works as a global exception
+                    // handler if some code doesnt have try catch
+                    // the logic here could be complex but overall we are running appbuilder Iapplicationbuilder builder to exceptionhandler , running it
+                    // then we are setting the reposne status code of the context
+                    // then we are setting the error and storing
+                    // if error is not null meaning ther is an error , we are adding the error message to the context reponse
+                    // with this even without try catch and there are exceptions somewhere , it will send clean responses with information about exceptions
+                    // overall the main objcetive is if its dev mode we will send developer exception default page. 
+                    // if env is prod we get no information about the exception. that is what we are handling for some information about it with this handler.
+                app.UseExceptionHandler(builder =>{
+                    builder.Run(async context => {
+                        context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                        var error = context.Features.Get<IExceptionHandlerFeature>();
+                        if (error != null) {
+                            context.Response.AddApplicationError(error.Error.Message); // this is the static class method that we are using , we are extending the reponse with this method
+                            await context.Response.WriteAsync(error.Error.Message);
+                        }
+                    });
+                });
             }
 
             // Return HTTP requests to HTTPS
