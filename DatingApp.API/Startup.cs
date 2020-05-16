@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Diagnostics;
 using System.Net;
 using Microsoft.AspNetCore.Http;
 using DatingApp.API.Helpers;
+using AutoMapper;
 
 namespace DatingApp.API
 {
@@ -32,16 +33,29 @@ namespace DatingApp.API
                 // which has some setttings for establishing connections stuff like that
             services.AddDbContext<DataContext>(x => 
                                         x.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
+            
+            // what we are doing here is askign the service to ignore these erros are we have user in phot and photo in user
+            //Self referencing loop detected for property 'user' with type 'DatingApp.API.Models.User'. Path '[0].photos[0]'.
+            services.AddControllers().AddNewtonsoftJson(opt =>
+            {
+                opt.SerializerSettings.ReferenceLoopHandling =
+                    Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+            });
             // Ordering of services to the container is not that important
             // Odding cors as a service to the container here.
             services.AddCors(); 
-            services.AddControllers();
+            // adding automapper to the service contariner to user later.
+            services.AddAutoMapper(typeof(DatingRepo).Assembly);
+            // adding newtonsoft json suppoprt to the controllers here aftter installing package newtonsoft json
+            // newtonsoft json will be replaced by a microsfot prackage .text as netwon is third party
+            services.AddControllers().AddNewtonsoftJson();
             // Create one instance of a service or class and that can be used throughoyut the application best for concurrent requests
             //services.AddSingleton();
             // Lightweight stateless services , these are created each time the request is coming.
             //services.AddTransient();
             // Lervice is created once per scope. its in the middle of singleton and transient , suitable for our autrepo that we are creating here.
             services.AddScoped<IAuthRepository,AuthRepository>(); // This now is ready to be injected , has its interface and its concreate implementaion.
+            services.AddScoped<IDatingRepo,DatingRepo>();
             //Authentication as serivce
             // We are basically telling to use the token from the appsettings to use for jwt token reposne key which is used for authorization
             // By doing this api methods can only be consuned if the request is authorized
