@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { environment } from 'src/environments/environment';
 
 @Injectable({ // this allows us to inject thing into our service , services are not auto injectable
   providedIn: 'root' // this tells our service and any components that is using thisservice what is providing this serivce.
@@ -9,7 +10,7 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 export class AuthService {
 
   // hardcoding base url can avoid this in real cases.
-  baseUrl = 'http://localhost:5000/api/auth/';
+  baseUrl = environment.apiUrl + 'auth/'; // this is to definite some settings depending on env from a file ( dev or prod )
   private _jwtHelper = new JwtHelperService();
   decodedToken: any;
   constructor(private _http: HttpClient) { }

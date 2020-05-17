@@ -1,0 +1,8 @@
+<div class="container mt-4">
+  <div class="row">
+    <!-- on large screen , each column is gonna be made of 2 grid column total 6. im medium 3 grid columns so 4 elements , small each grid 6 so only 2 , total is alwaus 12 elements-->
+    <div *ngFor="let user of users" class="col-lg-2 col-md-3 col-sm-6">
+      <app-member-card [user]="user"></app-member-card>
+    </div>
+  </div>
+</div>

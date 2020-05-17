@@ -4,3 +4,45 @@
 @import '../node_modules/font-awesome/css/font-awesome.min.css';
 @import '../node_modules/alertifyjs/build/css/alertify.min.css';
 @import '../node_modules/alertifyjs/build/css/themes/bootstrap.min.css';
+
+
+
+/* ===========
+Snippet for styles.css to style the tabs component 
+these styles are for the tb component in membe detail try to see if these styeles can be mved to member-detail.component.css
+=========== */
+
+ .tab-panel {
+    padding: 10px;
+    border-radius: 4px;
+  }
+
+  .member-tabset > .nav-tabs > li.open > a, .member-tabset > .nav-tabs > li:hover > a {
+    border: 0;
+  }
+  
+  .member-tabset > .nav-tabs > li.open .dropdown-menu, .member-tabset > .nav-tabs > li:hover .dropdown-menu {
+    margin-top: 0px;
+  }
+  
+  .member-tabset > .nav-tabs > li.active {
+    position: relative;
+  }
+  
+  .member-tabset > .nav-tabs > li.active > a {
+    border: 0 !important;
+  }
+  
+  .member-tabset > .tab-content {
+    margin-top: -3px;
+    border: 0;
+    padding: 15px 0;
+  }
+
+  .nav-tabs .nav-item {
+    margin-bottom: 0;
+  }
+
+  .nav-tabs {
+    border: 0;
+  }
