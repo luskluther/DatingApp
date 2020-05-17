@@ -21,9 +21,9 @@ export class NavComponent implements OnInit {
 
   login() {
     this._authService.login(this.model).subscribe(next => { // next option here takes a function what needs to happen next ?
-      this._alertify.success('loggen in successfully');
+      this._alertify.success('Loggen successfully');
     }, error => {
-      this._alertify.error('loggen failed');
+      this._alertify.error('Loggen failed');
     }, () => { // complete method which is third parameter to subscribe
       this._router.navigate(['/members']);
     });
@@ -35,8 +35,7 @@ export class NavComponent implements OnInit {
 
   logOut() {
     localStorage.removeItem('token');
-    this._alertify.success('logged eout');
+    this._alertify.success('Successfully logged out');
     this._router.navigate(['/home']);
   }
-
 }

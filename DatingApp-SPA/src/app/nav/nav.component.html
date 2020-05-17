@@ -1,5 +1,6 @@
 <nav class="navbar navbar-expand-md navbar-dark bg-dark">
   <div class="container">
+    
     <a class="navbar-brand" href="#" [routerLink]="['/home']">A Random App</a>
       
     <ul *ngIf="loggedIn()" class="navbar-nav mr-auto">
@@ -18,9 +19,8 @@
       <a class="dropdown-toggle text-light" dropdownToggle>
         You're logged in , what's up {{_authService.decodedToken?.unique_name | titlecase}}?
       </a>
-    
       <div class="dropdown-menu mt-2" aria-labelledby="dropdownMenuLink" *dropdownMenu>
-        <a class="dropdown-item" href="#">Edit Profile</a>
+        <a class="dropdown-item" [routerLink]="['/member/edit']">Edit Profile</a>
         <div class="dropdown-divider"></div>
         <a class="dropdown-item" href="#" (click)="logOut()"><i class="fa fa-sign-out"></i>Log out</a>
       </div>
@@ -31,5 +31,6 @@
       <input class="form-control mr-sm-2" type="password" name="password" placeholder="Password" required [(ngModel)]="model.password">
       <button [disabled]="!loginForm.valid" class="btn btn-primary my-2 my-sm-0" type="submit">Login</button>
     </form>
+    
   </div>
 </nav>

@@ -13,6 +13,7 @@ import { catchError } from 'rxjs/operators';
 // and from the resolver like below returns the data everytime that route is hit in format required.
 // in the component just we subscribe to the active route and since that data is already provided we dont need to make call to get
     // user or users everytime we are going to that router with separate get calls , route takes care of it
+// by doing all this we would ahve already gotten the data before we activeate or hit a routle to which we can just subscribe
 @Injectable()
 export class MemberListResolver implements Resolve<User[]> {
 

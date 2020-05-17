@@ -24,8 +24,11 @@ import { MemberCardComponent } from './members/member-card/member-card.component
 import { MemberDetailComponent } from './members/member-detail/member-detail.component';
 import { MemberDetailResolver } from './_resolvers/member-detail.resolver';
 import { MemberListResolver } from './_resolvers/member-list.resolver';
+import { MemberEditComponent } from './members/member-edit/member-edit.component';
+import { MemberEditResolver } from './_resolvers/member-edit.resolver';
+import { PreventUnsavedChanges } from './_guards/prevent-unsaved-changes.guard';
 
-export function tokenGetter(){
+export function tokenGetter() {
    return localStorage.getItem('token');
 }
 
@@ -39,7 +42,8 @@ export function tokenGetter(){
       ListsComponent,
       MessagesComponent,
       MemberCardComponent,
-      MemberDetailComponent
+      MemberDetailComponent,
+      MemberEditComponent
    ],
    imports: [
       BrowserModule,
@@ -49,7 +53,7 @@ export function tokenGetter(){
       BrowserAnimationsModule,
       BsDropdownModule.forRoot(),
       RouterModule.forRoot(appRoutes),
-      JwtModule.forRoot({ 
+      JwtModule.forRoot({
             // what this is doing is our get post calls for controllers need a token to be authorized
             // if we login first , and there are calls that we are simultaneously making then dont yet have a token
             // because the login controller takes time to get us the token and then its saved in the local storage
@@ -58,7 +62,7 @@ export function tokenGetter(){
             // for that we are injecting this config so all domains which need the token are in whitelist
             // all domains or service which do not need the token example login from auth are in blacklisted
             // tokengetter is the method to get the token
-            // this module also provides an interceptor which will attack the Token from this config to all http calls 
+            // this module also provides an interceptor which will attack the Token from this config to all http calls
             // the above line isthe real use
          config: {
             tokenGetter: tokenGetter,
@@ -73,7 +77,9 @@ export function tokenGetter(){
       AuthService,
       MemberDetailResolver,
       MemberListResolver,
-      ErrorInterceptorProvider
+      MemberEditResolver,
+      ErrorInterceptorProvider,
+      PreventUnsavedChanges
    ],
    bootstrap: [
       AppComponent
