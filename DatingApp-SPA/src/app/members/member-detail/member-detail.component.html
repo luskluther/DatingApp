@@ -20,9 +20,9 @@
         </div>
         <div>
           <strong>
-            Last Activee:
+            Last Active:
           </strong>
-          <p>{{user?.lastActive | date}}</p>
+          <p>{{user?.lastActive | timeAgo}}</p>
         </div>
         <div>
           <strong>
@@ -57,7 +57,7 @@
             <ngx-gallery [options]="galleryOptions" [images]="galleryImages"></ngx-gallery>
           </tab>
           <tab heading="Messages">
-            <p>MEssages will go here</p>
+            <p>Messages will go here</p>
           </tab>
         </tabset>
       </div>

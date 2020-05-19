@@ -72,6 +72,9 @@ namespace DatingApp.API
                 });
                 // just we are mapping appsettings.json for these settings with our local class.
             services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySettings"));
+
+            // this is a special class created to log user activity and update last active of every user generically . globally
+            services.AddScoped<LogUserActivity>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
