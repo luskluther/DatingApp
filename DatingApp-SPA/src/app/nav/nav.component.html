@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-md navbar-dark bg-dark">
   <div class="container">
     
-    <a class="navbar-brand" href="#" [routerLink]="['/home']">A Random App</a>
+    <a class="navbar-brand" href="#" [routerLink]="['/home']">Profile App</a>
       
     <ul *ngIf="loggedIn()" class="navbar-nav mr-auto">
       <li class="nav-item" routerLinkActive="active">
@@ -16,6 +16,9 @@
     </ul>
 
     <div *ngIf="loggedIn()" class="dropdown" dropdown>
+      <span class="mr-1">
+        <img src="{{photoUrl}}" alt="">
+      </span>
       <a class="dropdown-toggle text-light" dropdownToggle>
         You're logged in , what's up {{_authService.decodedToken?.unique_name | titlecase}}?
       </a>

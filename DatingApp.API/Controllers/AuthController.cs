@@ -3,6 +3,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 using DatingApp.API.Data;
 using DatingApp.API.DTOs;
 using DatingApp.API.Models;
@@ -18,8 +19,10 @@ namespace DatingApp.API.Controllers
     {
         private readonly IAuthRepository _repo;
         private readonly IConfiguration _config;
-        public AuthController(IAuthRepository repo, IConfiguration config)
+        private readonly IMapper _mapper;
+        public AuthController(IAuthRepository repo, IConfiguration config, IMapper mapper)
         {
+            this._mapper = mapper;
             this._config = config;
             this._repo = repo;
         }
@@ -54,10 +57,10 @@ namespace DatingApp.API.Controllers
         // 2. Always using lower care login
         // 3. Building up token after this which contains users id and username
         // 4. In order to make sure the token that the server sends is valid it needs to be signed by the server. Creating a security key and using this 
-            // as part of the signing credentials and encrypting this key with a hash algo
-            // we actually then careate the token with descipriton by passing the claim as subjects and expiry date of one day
+        // as part of the signing credentials and encrypting this key with a hash algo
+        // we actually then careate the token with descipriton by passing the claim as subjects and expiry date of one day
         // 5. Then we pass the signing credentials following which we created and then create a jwt handler which allows to create a token based on passed
-            // token desciption
+        // token desciption
         // 6. We will then write this to the repsonse that we send to the user/client.
         // 7. This token can be used by the users as authorization
         [HttpPost("login")]
@@ -80,9 +83,10 @@ namespace DatingApp.API.Controllers
             var key = new SymmetricSecurityKey(Encoding.UTF8.
                         GetBytes(_config.GetSection("AppSettings:Token").Value));
 
-            var credentials = new SigningCredentials(key,SecurityAlgorithms.HmacSha512Signature); // we are signing here 
+            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature); // we are signing here 
 
-            var tokenDescriptor = new SecurityTokenDescriptor {
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
                 Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.Now.AddDays(1),
                 SigningCredentials = credentials
@@ -92,9 +96,12 @@ namespace DatingApp.API.Controllers
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
 
+            var user = _mapper.Map<UserForListDto>(userFromRepo);
             return Ok(
-            new {
-                token = tokenHandler.WriteToken(token)
+            new
+            {
+                token = tokenHandler.WriteToken(token),
+                user // sending user as well to client when logged in
             });
         }
     }

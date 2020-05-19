@@ -12,3 +12,8 @@
     padding: 10px 15 px;
     border-top:none;
 }
+
+::ng-deep .nav-link {
+    background-repeat: repeat !important;
+    border: 0 !important;
+}

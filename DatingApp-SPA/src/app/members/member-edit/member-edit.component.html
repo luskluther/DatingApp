@@ -6,7 +6,7 @@
     <div class="col-sm-8">
       <div *ngIf="editForm.dirty" class="alert alert-info">
           <strong>Information:</strong>
-          Your have made chagnes. Any unsaved changed will be lost !
+          Your have made changes. Any unsaved changed will be lost !
       </div>
     </div>
   </div>
@@ -14,7 +14,7 @@
     
     <div class="col-sm-4">
       <div class="card">
-        <img src="{{user?.photoUrl}}" alt="{{user?.knownAs}}" class="card-image-top img-thumbnail">
+        <img src="{{photoUrl}}" alt="{{user?.knownAs}}" class="card-image-top img-thumbnail">
       <div class="card-body">
         <div>
           <strong>
@@ -68,7 +68,7 @@
             </form>
           </tab>
           <tab heading="Edit Photos">
-            <p>Photos will be edited here</p>
+            <app-photo-editor [photos]="user.photos" (getMemberPhotoChanged)="updateMainPhoto($event)"></app-photo-editor>
           </tab>
         </tabset>
       </div>

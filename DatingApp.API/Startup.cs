@@ -70,6 +70,8 @@ namespace DatingApp.API
                         ValidateAudience = false
                     };
                 });
+                // just we are mapping appsettings.json for these settings with our local class.
+            services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySettings"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -103,7 +105,7 @@ namespace DatingApp.API
                 });
             }
 
-            // Return HTTP requests to HTTPS
+            // Redirect HTTP requests to HTTPS
             // app.UseHttpsRedirection();
 
             // The steps and order that we are trying to configure for the request pipe line are important
