@@ -39,20 +39,20 @@ namespace DatingApp.API.Controllers
                 return BadRequest("Username already exists.");
             }
 
-            var userToCreate = new User
-            {
-                UserName = userForRegisterDto.UserName
-            };
+            var userToCreate = _mapper.Map<User>(userForRegisterDto);
 
             var createdUser = await _repo.Register(userToCreate, userForRegisterDto.Password);
 
-            //This is the same status code as createdatroute , not sure what that is though
-            return StatusCode(201);
+            var userToReturn = _mapper.Map<UserForDetailedDto>(createdUser);
+            //This is the same status code as createdatroute 201, not sure what that is though < useless comment , figured.
+            // what this does is send us back a route with this user so we can directly access
+            // example return is like : local/5000/user/12 something like that so this user is available at 12 api
+            return CreatedAtRoute("GetUser", new {controller = "Users", id = createdUser.Id}, userToReturn);
         }
 
-        // After user registers , we will send him back a JWT token
+        // After user registers , we will send user back a JWT token
         // For all subsequent requests , the client will send us this token which can be used to authenticate the user while making other requests.
-        // What exactly is happening here ? for the loging process ? read below : 
+        // What exactly is happening here ? for the login process ? read below : 
         // 1. First we are checking to see if we have  a user and their id pass words match in the db
         // 2. Always using lower care login
         // 3. Building up token after this which contains users id and username

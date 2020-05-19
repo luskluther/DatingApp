@@ -39,8 +39,8 @@ export class AuthService {
               // these rxjs operators they do similar js funcitonlaity but with ovservables
   }
 
-  register(model: any) {
-    return this._http.post(this.baseUrl + 'register', model);
+  register(user: User) {
+    return this._http.post(this.baseUrl + 'register', user);
   }
 
   loggedIn() {
