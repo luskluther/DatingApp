@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DatingApp.API.Helpers;
@@ -52,6 +53,16 @@ namespace DatingApp.API.Data
             users = users.Where(u => u.Id != userParams.UserId); // removing logged in user
             users = users.Where(u => u.Gender == userParams.Gender); // removing other gender users
 
+            if (userParams.Likers) { // get users who have liked the user.
+                var userLikers = await GetUserLikes(userParams.UserId, userParams.Likers);
+                users = users.Where(u => userLikers.Contains(u.Id));
+            }
+
+            if (userParams.Likees) { // get users who the user liked.
+                var userLikees = await GetUserLikes(userParams.UserId, userParams.Likers);
+                users = users.Where(u => userLikees.Contains(u.Id));
+            }
+
             if (userParams.MinAge != 18 || userParams.MaxAge != 99) { // not default values we have to send custom values
                 var minDateOfBirth = DateTime.Today.AddYears(-userParams.MaxAge - 1);
                 var maxDateOfBirth = DateTime.Today.AddYears(-userParams.MinAge);
@@ -73,6 +84,25 @@ namespace DatingApp.API.Data
         public async Task<bool> SaveAll()
         {
             return await _context.SaveChangesAsync() > 0; // if this returns more than 0 it means save is done if its = 0 , nothing saved so false
+        }
+
+        public async Task<Like> GetLike(int userId, int recepientId)
+        {
+            return await _context.Likes.
+                        FirstOrDefaultAsync(u => u.LikerId == userId && u.LikeeId == recepientId); // return the like or null if exists or not
+        }
+
+        private async Task<IEnumerable<int>> GetUserLikes(int id, bool likers) {
+
+            var user = await _context.Users
+                        .Include(x=> x.Likers) // just returning what the user has liked or was liked
+                        .Include(x => x.Likees)
+                        .FirstOrDefaultAsync(user => user.Id == id);
+            if (likers) {
+                return user.Likers.Where(u => u.LikeeId == id).Select(i => i.LikerId); // selecting list of likers of logged in user
+            } else {
+                return user.Likees.Where(u => u.LikerId == id).Select(i => i.LikeeId); 
+            }
         }
     }
 }
