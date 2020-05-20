@@ -26,15 +26,25 @@ namespace DatingApp.API.Controllers
             this._datingRepo = datingRepo;
         }
 
-
-        [HttpGet]
-        public async Task<IActionResult> GetUsers()
+        [HttpGet] // we are telling the controller we will get the parameters from query since its a get call no body in the request
+        // paramerts can come like this api/users?pageNumber=2&pageSize=3 to the api like this 
+        public async Task<IActionResult> GetUsers([FromQuery]UserParams userParams)
         {
-            var users = await _datingRepo.GetUsers();
-            var userToReturn = _mapper.Map<IEnumerable<UserForListDto>>(users); // mapper
-            return Ok(userToReturn);
-        }
+            var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var userFromRepo = await _datingRepo.GetUser(currentUserId);
+            userParams.UserId = currentUserId;
+            
+            if (string.IsNullOrEmpty(userParams.Gender)) {
+                userParams.Gender = userFromRepo.Gender == "male" ? "female" : "male";
+            }
+            
+            var users = await _datingRepo.GetUsers(userParams);
+            var usersToReturn = _mapper.Map<IEnumerable<UserForListDto>>(users); // mapper
 
+            // static method we created earlier , we are sending the pagination informtaion in ther headers of the response. check postman
+            Response.AddPagination(users.CurrentPage, users.PageSize, users.TotalCount, users.TotalPages);
+            return Ok(usersToReturn);
+        }
 
         [HttpGet("{id}", Name = "GetUser")]
         public async Task<IActionResult> GetUser(int id)
@@ -61,7 +71,6 @@ namespace DatingApp.API.Controllers
             if (await _datingRepo.SaveAll()) { 
                 return NoContent(); // save successful so return nothing thats the appropriate return
             }
-
             throw new Exception($"Updating user {id} failed on save");
         }
     }

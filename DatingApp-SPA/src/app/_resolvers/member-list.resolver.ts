@@ -16,11 +16,13 @@ import { catchError } from 'rxjs/operators';
 // by doing all this we would ahve already gotten the data before we activeate or hit a routle to which we can just subscribe
 @Injectable()
 export class MemberListResolver implements Resolve<User[]> {
+    pageNumer = 1;
+    pageSize = 5;
 
     constructor(private _userService: UserService, private _router: Router, private _alertify: AlertifyService) {}
 
     resolve(route: ActivatedRouteSnapshot): Observable<User[]> {
-        return this._userService.getUsers().pipe(
+        return this._userService.getUsers(this.pageNumer, this.pageSize).pipe(
             catchError(error => {
                 this._alertify.error('Problem retrieving data');
                 this._router.navigate(['/home']);
