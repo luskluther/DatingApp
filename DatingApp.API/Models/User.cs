@@ -19,10 +19,13 @@ namespace DatingApp.API.Models
         public string Interests { get; set; }
         public string City { get; set; }
         public string Country { get; set; }
-        public ICollection<Photo> Photos { get; set; }
-        public ICollection<Like> Likers { get; set; }
-        public ICollection<Like> Likees { get; set; }
-        public ICollection<Message> MessageSent { get; set; }
-        public ICollection<Message> MessagesReceived { get; set; }
+        public virtual ICollection<Photo> Photos { get; set; } // the virual is so that we are using uselazyloadingproxies
+                                            // in startup configuration , so these will be loaded automatically
+                                            // no need to include in the repo so commented that
+                                            // this will help load what is required or what is to be sebnt automaticatlly
+        public virtual ICollection<Like> Likers { get; set; }
+        public virtual ICollection<Like> Likees { get; set; }
+        public virtual ICollection<Message> MessageSent { get; set; }
+        public virtual ICollection<Message> MessagesReceived { get; set; }
     }
 }

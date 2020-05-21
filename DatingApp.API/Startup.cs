@@ -23,6 +23,22 @@ namespace DatingApp.API
             Configuration = configuration;
         }
 
+        public void ConfigureDevelopmentServices(IServiceCollection services) { // if env is dev we use this string sqllite
+            services.AddDbContext<DataContext>(x => {
+                x.UseLazyLoadingProxies(); // lazy loading
+                x.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
+            });
+            ConfigureServices(services);
+        }
+
+        public void ConfigureProductionServices(IServiceCollection services) { // if env is prodiction we use sql servcer
+            
+            services.AddDbContext<DataContext>(x => {
+                x.UseLazyLoadingProxies(); // lazy loading
+                x.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+            });
+            ConfigureServices(services);
+        }
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -116,12 +132,19 @@ namespace DatingApp.API
 
             app.UseAuthentication();
             app.UseAuthorization();
-
+            app.UseDefaultFiles();// tries to find the index.html and files like that
+            app.UseStaticFiles();// this provbides the static js files for the web app in wwwroot folder
             app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            
+            app.UseDefaultFiles(); // serving defaulty static angular proj files from the api project, it will look at wwwroot folder and fget the index,html
+            app.UseStaticFiles(); // same as above
+
             app.UseEndpoints(endpoints =>
             {
                 // Controller End Points are mapped here
                 endpoints.MapControllers();
+                endpoints.MapFallbackToController("Index", "Fallback"); // anything its not aware of it will fall back to here, basically for angular routes that it doesnt know
+                            // so nnow the routes in the url are back to being taken care of by the Angular app and not the net core environment.
             });
         }
     }

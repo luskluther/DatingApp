@@ -42,13 +42,17 @@ namespace DatingApp.API.Data
         public async Task<User> GetUser(int id)
         {
             // including the photos table or photo of that user too
-           var user = await _context.Users.Include(p => p.Photos).FirstOrDefaultAsync(u => u.Id == id);
+           var user = await _context.Users
+           //.Include(p => p.Photos) us9ing lopading loazing now
+           .FirstOrDefaultAsync(u => u.Id == id);
            return user;
         }
 
         public async Task<PagedList<User>> GetUsers(UserParams userParams)
         {
-            var users =  _context.Users.Include(p => p.Photos).OrderByDescending(u => u.LastActive).AsQueryable(); // no need to user await here becaues we are using in next step
+            var users =  _context.Users
+            //.Include(p => p.Photos) using lazy loading now proxies package
+            .OrderByDescending(u => u.LastActive).AsQueryable(); // no need to user await here becaues we are using in next step
 
             users = users.Where(u => u.Id != userParams.UserId); // removing logged in user
             users = users.Where(u => u.Gender == userParams.Gender); // removing other gender users
@@ -95,8 +99,8 @@ namespace DatingApp.API.Data
         private async Task<IEnumerable<int>> GetUserLikes(int id, bool likers) {
 
             var user = await _context.Users
-                        .Include(x=> x.Likers) // just returning what the user has liked or was liked
-                        .Include(x => x.Likees)
+                        //.Include(x=> x.Likers) // just returning what the user has liked or was liked
+                        //.Include(x => x.Likees)
                         .FirstOrDefaultAsync(user => user.Id == id);
             if (likers) {
                 return user.Likers.Where(u => u.LikeeId == id).Select(i => i.LikerId); // selecting list of likers of logged in user
@@ -112,10 +116,11 @@ namespace DatingApp.API.Data
 
         public async Task<PagedList<Message>> GetMessagesForUser(MessageParams messageParams)
         {
-            var messages = _context.Messages.Include(u => u.Sender)
-                .ThenInclude(p => p.Photos)
-                .Include(u => u.Recipient)
-                .ThenInclude(p => p.Photos)
+            var messages = _context.Messages
+                 //.Include(u => u.Sender)
+                //.ThenInclude(p => p.Photos)
+                //.Include(u => u.Recipient)
+                //.ThenInclude(p => p.Photos)
                 .AsQueryable(); // this will allow to add .Where like below
             
             switch(messageParams.MessageContainer) {
@@ -133,10 +138,11 @@ namespace DatingApp.API.Data
 
         public async Task<IEnumerable<Message>> GetMessageThread(int userId, int recipientId)
         {
-            var messages = await _context.Messages.Include(u => u.Sender)
-                .ThenInclude(p => p.Photos)
-                .Include(u => u.Recipient)
-                .ThenInclude(p => p.Photos)
+            var messages = await _context.Messages
+                //.Include(u => u.Sender)
+                //.ThenInclude(p => p.Photos)
+                //.Include(u => u.Recipient)
+                //.ThenInclude(p => p.Photos)
                 .Where(m => m.RecipientId == userId && 
                             m.RecipientDeleted == false && 
                             m.SenderId == recipientId || 
