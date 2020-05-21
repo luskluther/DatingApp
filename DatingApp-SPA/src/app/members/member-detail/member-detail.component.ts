@@ -21,7 +21,7 @@ export class MemberDetailComponent implements OnInit {
   @ViewChild('memberTabs') memberTabs: TabsetComponent;
 
   // if a route is activated we will be able to access tthat value
-  constructor(private _userSer: UserService,private _auth:AuthService, private _alrt: AlertifyService, private _route: ActivatedRoute) { }
+  constructor(private _userSer: UserService, private _auth: AuthService, private _alrt: AlertifyService, private _route: ActivatedRoute) { }
 
   ngOnInit() {
     this._route.data.subscribe(data => {
