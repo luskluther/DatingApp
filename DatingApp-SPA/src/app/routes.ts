@@ -11,6 +11,7 @@ import { MemberEditComponent } from './members/member-edit/member-edit.component
 import { MemberEditResolver } from './_resolvers/member-edit.resolver';
 import { PreventUnsavedChanges } from './_guards/prevent-unsaved-changes.guard';
 import { ListsResolver } from './_resolvers/lists.resolver';
+import { MessagesResolver } from './_resolvers/messages.resolver';
 
 // Routes work on first match , so the ordering is important.
 export const appRoutes: Routes = [
@@ -38,7 +39,9 @@ export const appRoutes: Routes = [
             canDeactivate: [PreventUnsavedChanges]
         },
         {
-            path: 'messages', component: MessagesComponent
+            path: 'messages', component: MessagesComponent, resolve: {
+                messages: MessagesResolver
+            },
         },
         {
             path: 'lists', component: ListsComponent, resolve: {

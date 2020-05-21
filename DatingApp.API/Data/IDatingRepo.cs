@@ -8,7 +8,7 @@ namespace DatingApp.API.Data
     public interface IDatingRepo
     {
         // What this is : add a type of T photo or user example , entity as parameter or type t and t can only be only classes 
-        // so no need to add two methods.
+            // so no need to add two methods.
         void Add<T>(T entity) where T: class;
         void Delete<T>(T entity) where T: class;
         Task<bool> SaveAll();
@@ -17,5 +17,8 @@ namespace DatingApp.API.Data
         Task<Photo> GetPhoto(int id);
         Task<Photo> GetMainPhoto(int userId);
         Task<Like> GetLike(int userId, int recepientId);
+        Task<Message> GetMessage(int id);
+        Task<PagedList<Message>> GetMessagesForUser(MessageParams messageParams);
+        Task<IEnumerable<Message>> GetMessageThread(int userId, int recipientId);
     }
 }
