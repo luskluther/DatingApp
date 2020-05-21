@@ -5,6 +5,7 @@ import { AlertifyService } from 'src/app/_services/alertify.service';
 import { ActivatedRoute } from '@angular/router';
 import { NgxGalleryOptions, NgxGalleryImage, NgxGalleryAnimation } from 'ngx-gallery';
 import { TabsetComponent } from 'ngx-bootstrap/tabs';
+import { AuthService } from 'src/app/_services/auth.service';
 
 @Component({
   selector: 'app-member-detail',
@@ -20,7 +21,7 @@ export class MemberDetailComponent implements OnInit {
   @ViewChild('memberTabs') memberTabs: TabsetComponent;
 
   // if a route is activated we will be able to access tthat value
-  constructor(private _userSer: UserService, private _alrt: AlertifyService, private _route: ActivatedRoute) { }
+  constructor(private _userSer: UserService,private _auth:AuthService, private _alrt: AlertifyService, private _route: ActivatedRoute) { }
 
   ngOnInit() {
     this._route.data.subscribe(data => {
@@ -58,5 +59,13 @@ export class MemberDetailComponent implements OnInit {
 
   selectTab(tabId: number) {
     this.memberTabs.tabs[tabId].active = true;
+  }
+
+  sendLike(recepientId: number) {
+    this._userSer.sendLike(this._auth.decodedToken.nameid, recepientId).subscribe(data => {
+      this._alrt.success('You have liked ' + this.user.knownAs);
+    }, error => {
+      this._alrt.error(error);
+    });
   }
 }

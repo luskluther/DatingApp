@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -99,6 +100,55 @@ namespace DatingApp.API.Controllers
             }
 
             return BadRequest("Couldnt create message");
+        }
+
+        [HttpPost("{id}")]
+        public async Task<IActionResult> DeleteMessage(int id, int userId) {
+            
+            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)){
+                return Unauthorized();
+            }
+
+            var messageFromRepo = await _datingRepo.GetMessage(id);
+
+            if (messageFromRepo.SenderId == userId) {
+                messageFromRepo.SenderDeleted = true;
+            }
+
+            if (messageFromRepo.RecipientId == userId) {
+                messageFromRepo.RecipientDeleted = true;
+            }
+
+            if (messageFromRepo.SenderDeleted && messageFromRepo.RecipientDeleted) { // both deleted the message
+                _datingRepo.Delete(messageFromRepo);
+            }
+
+            if (await _datingRepo.SaveAll()) {
+                return NoContent();
+            }
+
+            throw new Exception("Error deleting message");
+        }
+
+        [HttpPost("{id}/read")]
+        public async Task<IActionResult> MarkMessageAsRead(int userId, int id) {
+            
+            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)){
+                return Unauthorized();
+            }
+
+            var message = await _datingRepo.GetMessage(id);
+
+            if (message.RecipientId != userId) {
+                return Unauthorized();
+            }
+
+            message.IsRead = true;
+            message.DateRead = DateTime.Now;
+
+            await _datingRepo.SaveAll();
+
+            return NoContent();
         }
     }
 }

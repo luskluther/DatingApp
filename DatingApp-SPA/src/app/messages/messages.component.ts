@@ -5,6 +5,7 @@ import { AuthService } from '../_services/auth.service';
 import { ActivatedRoute } from '@angular/router';
 import { AlertifyService } from '../_services/alertify.service';
 import { UserService } from '../_services/user.service';
+import { error } from 'protractor';
 
 @Component({
   selector: 'app-messages',
@@ -31,9 +32,22 @@ export class MessagesComponent implements OnInit {
       subscribe((res: PaginatedResult<Message[]>) => {
         this.messages = res.result;
         this.pagination = res.pagination;
+      // tslint:disable-next-line: no-shadowed-variable
       }, error => {
         this._alert.error(error);
       });
+  }
+
+  deleteMessage(id: number) {
+    this._alert.confirm('Are you sure you want to delete this message ?', () => {
+      this._user.deleteMessage(id, this._auth.decodedToken.nameid).subscribe(() => {
+        this.messages.splice(this.messages.findIndex(m => m.id === id), 1); // findinfg thiwhc message to delete and then deleting it.
+        this._alert.success('Message Deleted');
+      // tslint:disable-next-line: no-shadowed-variable
+      } , error => {
+        this._alert.error('Failed to delete message');
+      });
+    });
   }
 
   pageChanged(event: any): void {

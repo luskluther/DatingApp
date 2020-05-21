@@ -20,7 +20,7 @@ export class MemberCardComponent implements OnInit {
 
   sendLike(recepientId: number) {
     this._userSer.sendLike(this._auth.decodedToken.nameid, recepientId).subscribe(data => {
-      this._alert.success('You have liked' + this.user.knownAs);
+      this._alert.success('You have liked ' + this.user.knownAs);
     }, error => {
       this._alert.error(error);
     });

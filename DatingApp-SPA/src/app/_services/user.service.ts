@@ -111,4 +111,13 @@ export class UserService {
   sendMessage(userId: number, message: Message) {
     return this._http.post(this.baseUrl + 'users/' + userId + '/messages', message);
   }
+
+  deleteMessage(id: number, userId: number) {
+    return this._http.post(this.baseUrl + 'users/' + userId + '/messages/' + id, {});
+  }
+
+  markAsRead (userId: number, messageId: number) {
+    /// we are not sending anything back just we are reading so subscribing here only
+    this._http.post(this.baseUrl + 'users/' + userId + '/messages/' + messageId + '/read', {}).subscribe();
+  }
 }
